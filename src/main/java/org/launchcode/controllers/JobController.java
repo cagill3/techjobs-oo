@@ -1,5 +1,6 @@
 package org.launchcode.controllers;
 
+import org.launchcode.models.Employer;
 import org.launchcode.models.Job;
 import org.launchcode.models.forms.JobForm;
 import org.launchcode.models.data.JobData;
@@ -25,8 +26,8 @@ public class JobController {
     public String index(Model model, int id) {
 
         // TODO #1 - get the Job with the given ID and pass it into the view
-        Job someJob = jobData.findById(id);
-        model.addAttribute("someJob", someJob);
+        Job newJob = jobData.findById(id);
+        model.addAttribute("newJob", newJob);
 
         return "job-detail";
     }
@@ -44,7 +45,12 @@ public class JobController {
         // new Job and add it to the jobData data store. Then
         // redirect to the job detail view for the new Job.
 
-        return "";
+        if (jobForm.getName() != "") {
 
+        }
+        else {
+            return "redirect:add";
+        }
+        return "job-detail";
     }
 }
