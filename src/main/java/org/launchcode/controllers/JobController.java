@@ -1,7 +1,6 @@
 package org.launchcode.controllers;
 
-import org.launchcode.models.Employer;
-import org.launchcode.models.Job;
+import org.launchcode.models.*;
 import org.launchcode.models.forms.JobForm;
 import org.launchcode.models.data.JobData;
 import org.springframework.stereotype.Controller;
@@ -9,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import javax.validation.Valid;
 
@@ -39,18 +40,30 @@ public class JobController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String add(Model model, @Valid JobForm jobForm, Errors errors) {
+    public String add(Model model, @Valid JobForm jobForm, Errors errors, RedirectAttributes attributes) {
 
         // TODO #6 - Validate the JobForm model, and if valid, create a
         // new Job and add it to the jobData data store. Then
         // redirect to the job detail view for the new Job.
 
-        if (jobForm.getName() != "") {
+        if (errors.hasErrors()) {
 
+            return "new-job";
         }
-        else {
-            return "redirect:add";
-        }
-        return "job-detail";
+
+        String newJobName = jobForm.getName();
+        Employer newJobEmployer = jobData.getEmployers().findById(jobForm.getEmployerId());
+        Location newJobLocation = jobData.getLocations().findById(jobForm.getLocationId());
+        PositionType newJobPosType = jobData.getPositionTypes().findById(jobForm.getPositionTypeId());
+        CoreCompetency newJobCoreComp = jobData.getCoreCompetencies().findById(jobForm.getCoreCompetencyId());
+
+        Job newJob = new Job(newJobName, newJobEmployer, newJobLocation, newJobPosType, newJobCoreComp);
+
+
+        jobData.add(newJob);
+
+        attributes.addAttribute("id", newJob.getId());
+
+        return "redirect:/job";
     }
 }

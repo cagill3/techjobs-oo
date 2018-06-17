@@ -94,8 +94,7 @@ public class JobForm {
         this.locationId = locationId;
     }
 
-    public ArrayList<Location> getLocations() {
-        return locations;
+    public ArrayList<Location> getLocations() { return locations;
     }
 
     public void setLocations(ArrayList<Location> locations) {
